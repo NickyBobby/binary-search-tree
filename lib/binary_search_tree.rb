@@ -1,23 +1,4 @@
-require 'pry'
-
-class FileReader
-
-  def read(filename)
-    File.read(filename).chomp
-  end
-
-end
-
-class Node
-  attr_accessor :data, :left_link, :right_link, :level
-
-  def initialize(data, left_link = nil, right_link = nil)
-    @data = data
-
-  end
-
-end
-
+require './lib/node'
 
 class BinarySearchTree
   attr_accessor  :root
@@ -89,13 +70,13 @@ class BinarySearchTree
     def push(current, node)
       return if include?(node.data)
       if current.data < node.data
-        right_way(current, node)
+        push_right(current, node)
       else
-        left_way(current, node)
+        push_left(current, node)
       end
     end
 
-    def right_way(current, node)
+    def push_right(current, node)
       if current.right_link.nil?
         current.right_link = node
       else
@@ -104,7 +85,7 @@ class BinarySearchTree
       end
     end
 
-    def left_way(current, node)
+    def push_left(current, node)
       if current.left_link.nil?
         current.left_link = node
       else
@@ -129,11 +110,9 @@ class BinarySearchTree
       if current.data == data
         return counter
       elsif current.data < data && !current.right_link.nil?
-        counter += 1
-        look_for_depth(current.right_link, data, counter)
+        look_for_depth(current.right_link, data, counter+1)
       elsif current.data > data && !current.left_link.nil?
-        counter += 1
-        look_for_depth(current.left_link, data, counter)
+        look_for_depth(current.left_link, data, counter+1)
       end
     end
 
@@ -141,8 +120,7 @@ class BinarySearchTree
       if current.right_link.nil?
         return current.data
       else
-        current = current.right_link
-        look_for_max(current)
+        look_for_max(current.right_link)
       end
     end
 
@@ -150,8 +128,7 @@ class BinarySearchTree
       if current.left_link.nil?
         return current.data
       else
-        current = current.left_link
-        look_for_min(current)
+        look_for_min(current.left_link)
       end
     end
 
@@ -168,15 +145,13 @@ class BinarySearchTree
 
     def check_left(current, sorted_array)
       if !current.left_link.nil?
-        current = current.left_link
-        sort_tree_to_array(current, sorted_array)
+        sort_tree_to_array(current.left_link, sorted_array)
       end
     end
 
     def check_right(current, sorted_array)
       if !current.right_link.nil?
-        current = current.right_link
-        sort_tree_to_array(current, sorted_array)
+        sort_tree_to_array(current.right_link, sorted_array)
       end
     end
 
